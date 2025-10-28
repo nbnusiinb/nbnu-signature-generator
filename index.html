@@ -118,94 +118,99 @@
     function sigHTML(fields) {
       const name = fields.name?.trim() || '[First Name Last Name]';
       const pron = fields.pronouns?.trim();
-      const pronText = pron ? ` <span style="font-family: 'Poppins', Arial, sans-serif; font-weight: 400; font-size: 18px; color: #000000; letter-spacing: 0;">(${escapeHTML(pron)})</span>` : '';
+      const pronText = pron ? ' <span style="font-family: Poppins, Arial, sans-serif; font-weight: 400; font-size: 18px; color: #000000; letter-spacing: 0;">(' + escapeHTML(pron) + ')</span>' : '';
       const title = fields.title?.trim() || '[Title English / Title French]';
       const tel = fields.tel?.trim() || '[000.000.0000]';
       const cell = fields.cell?.trim();
       const fax = '506.453.0828';
 
-      // Build contact line with optional cell - FIXED: Using &nbsp; instead of margins
-      let contactLine = `<span style="font-weight: 400;">Tel/tél:</span> <span style="font-weight: 500;">${escapeHTML(tel)}</span>`;
+      let contactLine = '<span style="font-weight: 400;">Tel/tél:</span> <span style="font-weight: 500;">' + escapeHTML(tel) + '</span>';
       
       if (cell && cell !== '[000.000.0000]') {
-        contactLine += `&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<span style="font-weight: 400;">Cell/cel:</span> <span style="font-weight: 500;">${escapeHTML(cell)}</span>`;
+        contactLine += '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<span style="font-weight: 400;">Cell/cel:</span> <span style="font-weight: 500;">' + escapeHTML(cell) + '</span>';
       }
       
-      contactLine += `&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<span style="font-weight: 400;">Fax/téléc:</span> <span style="font-weight: 500;">${fax}</span>`;
+      contactLine += '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<span style="font-weight: 400;">Fax/téléc:</span> <span style="font-weight: 500;">' + fax + '</span>';
 
-      return `
-<table cellpadding="0" cellspacing="0" border="0" style="max-width: 750px; font-family: 'Poppins', Arial, sans-serif; font-size: 14px; color: #1a1a1a; line-height: 1.5;">
-  <tr>
-    <td style="padding-bottom: 8px;">
-      <div style="font-family: 'Archivo', Arial, sans-serif; font-weight: 700; font-size: 20px; color: ${BLUE}; margin-bottom: 5px; letter-spacing: -0.5px; line-height: 1.1;">
-        ${escapeHTML(name)}${pronText}
-      </div>
-      <div style="font-family: 'Poppins', Arial, sans-serif; font-size: 14px; color: #000000; margin-bottom: 10px; font-weight: 400; line-height: 1.3;">
-        ${escapeHTML(title)}
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td style="padding-bottom: 12px;">
-      <div style="width: 100%; height: 3px; background-color: ${BLUE};"></div>
-    </td>
-  </tr>
-  <tr>
-    <td style="padding-bottom: 20px;">
-      <div style="font-family: 'Poppins', Arial, sans-serif; font-size: 12px; color: #000000; line-height: 1.4;">
-        ${contactLine}
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td style="padding-bottom: 20px;">
-      <table cellpadding="0" cellspacing="0" border="0" width="100%">
-        <tr>
-          <td style="vertical-align: middle; width: auto;">
-            <img src="${LOGO}" alt="NBNU SIINB Logo" style="height: 48px; display: block; border: none;" />
-          </td>
-          <td style="vertical-align: middle; text-align: left; padding-left: 25px;">
-            <a href="https://www.facebook.com/NBNursesUnion/" style="text-decoration: none; margin-right: 12px; display: inline-block; vertical-align: middle;">
-              <img src="${FB}" alt="Facebook" style="width: 28px; height: 28px; display: block; border: none;" />
-            </a>
-            <a href="https://www.instagram.com/nbnu_siinb/" style="text-decoration: none; display: inline-block; vertical-align: middle;">
-              <img src="${IG}" alt="Instagram" style="width: 28px; height: 28px; display: block; border: none;" />
-            </a>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td style="padding: 18px 20px; background-color: #EEF1F5; border-radius: 4px;">
-      <div style="font-family: 'Poppins', Arial, sans-serif; font-size: 11px; color: #707070; line-height: 1.6;">
-        <strong style="font-family: 'Archivo', Arial, sans-serif; color: #707070; font-size: 12px; font-weight: 600;">Land Acknowledgement / Reconnaissance territoriale:</strong>
-      </div>
-      <div style="font-family: 'Poppins', Arial, sans-serif; font-size: 11px; color: #707070; line-height: 1.6; padding-top: 6px;">
-        <span style="font-weight: 400; font-style: italic;">NBNU acknowledges with gratitude that we, and our members, work on the traditional, ancestral, and unceded territory of the Peskotomuhkati, Wolastoqiyik, and Mi'kmaq Peoples who care for and nurture these lands and have from time immemorial. We further acknowledge the pervasive and ongoing harms of colonialism faced by Indigenous peoples. These harms include those described in the Truth and Reconciliation Commission's 94 calls to action and the Final Report of the National Inquiry into Missing and Murdered Indigenous Women and Girls' 231 calls to justice.</span>
-      </div>
-      <div style="font-family: 'Poppins', Arial, sans-serif; font-size: 11px; color: #707070; line-height: 1.6; padding-top: 6px;">
-        <span style="font-weight: 400; font-style: italic;">Le SIINB reconnaît avec gratitude que nous, ainsi que nos membres, travaillons sur le territoire traditionnel, ancestral et non cédé des peuples Peskotomuhkati, Wolastoqiyik et Mi'gmaq, qui prennent soin de ces terres et les protègent depuis des temps immémoriaux. Nous reconnaissons également les torts profonds et persistants du colonialisme subis par les peuples autochtones. Ces torts incluent ceux décrits dans les 94 appels à l'action de la Commission de vérité et réconciliation, ainsi que dans les 231 appels à la justice du rapport final de l'Enquête nationale sur les femmes et les filles autochtones disparues et assassinées.</span>
-      </div>
-    </td>
-  </tr>
-  <tr><td style="padding-top: 15px;"></td></tr>
-  <tr>
-    <td style="padding: 18px 20px; background-color: transparent;">
-      <div style="font-family: 'Poppins', Arial, sans-serif; font-size: 10px; color: #707070; line-height: 1.6;">
-        <strong style="font-family: 'Archivo', Arial, sans-serif; color: #707070; font-size: 11px; font-weight: 600;">Confidentiality Disclaimer / Avis de confidentialité:</strong>
-      </div>
-      <div style="font-family: 'Poppins', Arial, sans-serif; font-size: 10px; color: #707070; line-height: 1.6; padding-top: 6px;">
-        <span style="font-weight: 400; font-style: italic;">This email (including attachments, if any) contains information intended for the person(s) named, is confidential, and may be privileged. Any other distribution, copying or disclosure is strictly prohibited and does not constitute waiver of privilege. If you have received this email in error, please notify us immediately at the telephone number above or reply by email to the sender, and delete all copies of this message (and attachments, if any) from your computer system and records.</span>
-      </div>
-      <div style="font-family: 'Poppins', Arial, sans-serif; font-size: 10px; color: #707070; line-height: 1.6; padding-top: 6px;">
-        <span style="font-weight: 400; font-style: italic;">Le présent courriel (et les pièces jointes) contient des renseignements confidentiels réservés à l'usage de la ou des personnes identifiées comme destinataires. La distribution, reproduction ou diffusion de ce courriel est strictement interdite et n'emporte pas renonciation au privilège. Si ce courriel vous a été adressé par erreur, veuillez nous en aviser immédiatement par téléphone au numéro ci-dessus ou répondre par courriel à l'expéditeur ou l'expéditrice, et supprimer toutes les copies du message (et des pièces jointes) de votre système informatique et de vos dossiers.</span>
-      </div>
-    </td>
-  </tr>
-</table>`;
+      const landAckEn = 'NBNU acknowledges with gratitude that we, and our members, work on the traditional, ancestral, and unceded territory of the Peskotomuhkati, Wolastoqiyik, and Mi\'kmaq Peoples who care for and nurture these lands and have from time immemorial. We further acknowledge the pervasive and ongoing harms of colonialism faced by Indigenous peoples. These harms include those described in the Truth and Reconciliation Commission\'s 94 calls to action and the Final Report of the National Inquiry into Missing and Murdered Indigenous Women and Girls\' 231 calls to justice.';
+      
+      const landAckFr = 'Le SIINB reconnaît avec gratitude que nous, ainsi que nos membres, travaillons sur le territoire traditionnel, ancestral et non cédé des peuples Peskotomuhkati, Wolastoqiyik et Mi\'gmaq, qui prennent soin de ces terres et les protègent depuis des temps immémoriaux. Nous reconnaissons également les torts profonds et persistants du colonialisme subis par les peuples autochtones. Ces torts incluent ceux décrits dans les 94 appels à l\'action de la Commission de vérité et réconciliation, ainsi que dans les 231 appels à la justice du rapport final de l\'Enquête nationale sur les femmes et les filles autochtones disparues et assassinées.';
+      
+      const confDisclaimerEn = 'This email (including attachments, if any) contains information intended for the person(s) named, is confidential, and may be privileged. Any other distribution, copying or disclosure is strictly prohibited and does not constitute waiver of privilege. If you have received this email in error, please notify us immediately at the telephone number above or reply by email to the sender, and delete all copies of this message (and attachments, if any) from your computer system and records.';
+      
+      const confDisclaimerFr = 'Le présent courriel (et les pièces jointes) contient des renseignements confidentiels réservés à l\'usage de la ou des personnes identifiées comme destinataires. La distribution, reproduction ou diffusion de ce courriel est strictement interdite et n\'emporte pas renonciation au privilège. Si ce courriel vous a été adressé par erreur, veuillez nous en aviser immédiatement par téléphone au numéro ci-dessus ou répondre par courriel à l\'expéditeur ou l\'expéditrice, et supprimer toutes les copies du message (et des pièces jointes) de votre système informatique et de vos dossiers.';
+
+      return '<table cellpadding="0" cellspacing="0" border="0" style="max-width: 750px; font-family: Poppins, Arial, sans-serif; font-size: 14px; color: #1a1a1a; line-height: 1.5;">' +
+  '<tr>' +
+    '<td style="padding-bottom: 8px;">' +
+      '<div style="font-family: Archivo, Arial, sans-serif; font-weight: 700; font-size: 20px; color: ' + BLUE + '; margin-bottom: 5px; letter-spacing: -0.5px; line-height: 1.1;">' +
+        escapeHTML(name) + pronText +
+      '</div>' +
+      '<div style="font-family: Poppins, Arial, sans-serif; font-size: 14px; color: #000000; margin-bottom: 10px; font-weight: 400; line-height: 1.3;">' +
+        escapeHTML(title) +
+      '</div>' +
+    '</td>' +
+  '</tr>' +
+  '<tr>' +
+    '<td style="padding-bottom: 12px;">' +
+      '<div style="width: 100%; height: 3px; background-color: ' + BLUE + ';"></div>' +
+    '</td>' +
+  '</tr>' +
+  '<tr>' +
+    '<td style="padding-bottom: 20px;">' +
+      '<div style="font-family: Poppins, Arial, sans-serif; font-size: 12px; color: #000000; line-height: 1.4;">' +
+        contactLine +
+      '</div>' +
+    '</td>' +
+  '</tr>' +
+  '<tr>' +
+    '<td style="padding-bottom: 20px;">' +
+      '<table cellpadding="0" cellspacing="0" border="0" width="100%">' +
+        '<tr>' +
+          '<td style="vertical-align: middle; width: auto;">' +
+            '<img src="' + LOGO + '" alt="NBNU SIINB Logo" style="height: 48px; display: block; border: none;" />' +
+          '</td>' +
+          '<td style="vertical-align: middle; text-align: left; padding-left: 25px;">' +
+            '<a href="https://www.facebook.com/NBNursesUnion/" style="text-decoration: none; margin-right: 12px; display: inline-block; vertical-align: middle;">' +
+              '<img src="' + FB + '" alt="Facebook" style="width: 28px; height: 28px; display: block; border: none;" />' +
+            '</a>' +
+            '<a href="https://www.instagram.com/nbnu_siinb/" style="text-decoration: none; display: inline-block; vertical-align: middle;">' +
+              '<img src="' + IG + '" alt="Instagram" style="width: 28px; height: 28px; display: block; border: none;" />' +
+            '</a>' +
+          '</td>' +
+        '</tr>' +
+      '</table>' +
+    '</td>' +
+  '</tr>' +
+  '<tr>' +
+    '<td style="padding: 18px 20px; background-color: #EEF1F5; border-radius: 4px;">' +
+      '<div style="font-family: Poppins, Arial, sans-serif; font-size: 11px; color: #707070; line-height: 1.6;">' +
+        '<strong style="font-family: Archivo, Arial, sans-serif; color: #707070; font-size: 12px; font-weight: 600;">Land Acknowledgement / Reconnaissance territoriale:</strong>' +
+      '</div>' +
+      '<div style="font-family: Poppins, Arial, sans-serif; font-size: 11px; color: #707070; line-height: 1.6; padding-top: 6px;">' +
+        '<span style="font-weight: 400; font-style: italic;">' + landAckEn + '</span>' +
+      '</div>' +
+      '<div style="font-family: Poppins, Arial, sans-serif; font-size: 11px; color: #707070; line-height: 1.6; padding-top: 6px;">' +
+        '<span style="font-weight: 400; font-style: italic;">' + landAckFr + '</span>' +
+      '</div>' +
+    '</td>' +
+  '</tr>' +
+  '<tr><td style="padding-top: 15px;"></td></tr>' +
+  '<tr>' +
+    '<td style="padding: 18px 20px; background-color: transparent;">' +
+      '<div style="font-family: Poppins, Arial, sans-serif; font-size: 10px; color: #707070; line-height: 1.6;">' +
+        '<strong style="font-family: Archivo, Arial, sans-serif; color: #707070; font-size: 11px; font-weight: 600;">Confidentiality Disclaimer / Avis de confidentialité:</strong>' +
+      '</div>' +
+      '<div style="font-family: Poppins, Arial, sans-serif; font-size: 10px; color: #707070; line-height: 1.6; padding-top: 6px;">' +
+        '<span style="font-weight: 400; font-style: italic;">' + confDisclaimerEn + '</span>' +
+      '</div>' +
+      '<div style="font-family: Poppins, Arial, sans-serif; font-size: 10px; color: #707070; line-height: 1.6; padding-top: 6px;">' +
+        '<span style="font-weight: 400; font-style: italic;">' + confDisclaimerFr + '</span>' +
+      '</div>' +
+    '</td>' +
+  '</tr>' +
+'</table>';
     }
-
 
     function getFields() {
       return {
@@ -226,45 +231,48 @@
       }, 3000);
     }
 
-    // Preview button
     document.getElementById('btnPreview').addEventListener('click', function() {
       const fields = getFields();
       document.getElementById('preview').innerHTML = sigHTML(fields);
     });
 
-    // Copy button
     document.getElementById('btnCopy').addEventListener('click', async function() {
       const fields = getFields();
       const html = sigHTML(fields);
       
       try {
-        // Create a temporary container
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = html;
-        document.body.appendChild(tempDiv);
-
-        // Select the content
-        const range = document.createRange();
-        range.selectNodeContents(tempDiv);
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(range);
-
-        // Copy to clipboard
-        document.execCommand('copy');
-        
-        // Clean up
-        selection.removeAllRanges();
-        document.body.removeChild(tempDiv);
-
-        showToast('✓ Signature copied to clipboard!');
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            'text/html': new Blob([html], { type: 'text/html' }),
+            'text/plain': new Blob([html.replace(/<[^>]*>?/gm, '')], { type: 'text/plain' })
+          })
+        ]);
+        showToast('✓ Signature copied with formatting!');
       } catch (err) {
-        console.error('Copy failed:', err);
-        showToast('⚠ Copy failed. Please try Preview first.');
+        console.warn('Clipboard API failed, fallback to execCommand:', err);
+        try {
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = html;
+          document.body.appendChild(tempDiv);
+          
+          const range = document.createRange();
+          range.selectNodeContents(tempDiv);
+          const selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+          
+          document.execCommand('copy');
+          
+          selection.removeAllRanges();
+          document.body.removeChild(tempDiv);
+          showToast('✓ Signature copied (fallback method)');
+        } catch (err2) {
+          console.error('Both copy methods failed:', err2);
+          showToast('⚠ Copy failed. Please select and copy manually.');
+        }
       }
     });
 
-    // Reset button
     document.getElementById('btnReset').addEventListener('click', function() {
       document.getElementById('name').value = '';
       document.getElementById('pronouns').value = '';
@@ -275,10 +283,34 @@
       showToast('✓ Form reset');
     });
 
-    // Auto-preview on initial load
+    const btnDownload = document.createElement('button');
+    btnDownload.className = 'ghost';
+    btnDownload.textContent = 'Download HTML';
+    document.querySelector('.actions').appendChild(btnDownload);
+
+    btnDownload.addEventListener('click', function() {
+      const fields = getFields();
+      const html = sigHTML(fields);
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'NBNU_Signature.html';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('✓ HTML file downloaded');
+    });
+
     window.addEventListener('DOMContentLoaded', function() {
       const fields = getFields();
       document.getElementById('preview').innerHTML = sigHTML(fields);
+
+      const note = document.createElement('p');
+      note.style.fontSize = '13px';
+      note.style.color = '#555';
+      note.style.marginTop = '10px';
+      note.innerHTML = '<strong>Tip:</strong> If the "Copy" button doesn\'t preserve formatting, use <b>Preview</b> then right-click inside the signature → <b>Select All</b> → <b>Copy</b> → paste into Outlook.';
+      document.querySelector('.actions').after(note);
     });
   </script>
 </body>
