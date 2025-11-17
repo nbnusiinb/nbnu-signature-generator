@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NBNU | SIINB Signature Generator</title>
+  <style>
+    :root{--blue:#327ded;--ink:#1a1a1a;--gray:#707070;--panel:#EEF1F5}
+    body{margin:0;background:#f7f7f8;font-family:Arial,Helvetica,sans-serif;color:#222}
+    .wrap{max-width:960px;margin:32px auto;padding:16px}
+    .card{background:#fff;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.06);padding:24px}
+    h1{font-family:Arial,Helvetica,sans-serif;font-size:22px;margin:0 0 12px;color:#0D1B3E;font-weight:600}
+    p{line-height:1.6;font-family:Arial,Helvetica,sans-serif}
+    .browser-warning{background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:12px;margin-bottom:16px;font-size:13px;color:#856404;font-family:Arial,Helvetica,sans-serif;display:none}
+    .browser-warning.show{display:block}
+    .instructions{background:#e8f4f8;border-left:4px solid var(--blue);padding:16px;border-radius:8px;margin-bottom:24px}
+    .instructions h3{margin:0 0 12px;color:var(--blue);font-size:16px;font-family:Arial,Helvetica,sans-serif}
+    .instructions ol{margin:8px 0 0;padding-left:20px}
+    .instructions li{margin:8px 0;line-height:1.6}
+    .instructions a{color:var(--blue);text-decoration:none;font-weight:600}
+    .instructions a:hover{text-decoration:underline}
+    .instructions img{max-width:100%;height:auto;border-radius:4px;margin:12px 0;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+    .warning{background:#fff3cd;border-left:4px solid #ffc107;padding:12px;border-radius:8px;margin-top:12px;font-size:13px;color:#856404}
+    .warning strong{color:#856404}
+    .info-box{background:#e3f2fd;border-left:4px solid #2196f3;padding:12px;border-radius:8px;margin-top:12px;font-size:13px;color:#0d47a1}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px}
+    label{font-weight:600;font-size:13px;color:#0D1B3E;font-family:Arial,Helvetica,sans-serif;display:block;margin-bottom:6px}
+    input{width:100%;padding:10px 12px;border:1px solid #d9d9df;border-radius:8px;font-size:14px;font-family:Arial,Helvetica,sans-serif;box-sizing:border-box}
+    input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(50,125,237,0.1)}
+    input.error{border-color:#dc3545;background-color:#fff5f5}
+    .field-hint{font-size:11px;color:#666;margin-top:4px;font-family:Arial,Helvetica,sans-serif}
+    .signature-section{margin-top:24px;padding:20px;background:#f9f9f9;border-radius:10px;border:2px dashed #d9d9df}
+    .signature-section h2{margin:0 0 12px;font-size:18px;color:#0D1B3E;font-family:Arial,Helvetica,sans-serif}
+    .signature-section p{margin:0 0 12px;font-size:13px;color:#666}
+    button{appearance:none;border:0;border-radius:10px;padding:12px 24px;font-weight:600;cursor:pointer;font-size:14px;font-family:Arial,Helvetica,sans-serif;transition:all 0.2s;width:100%}
+    .primary{background:var(--blue);color:#fff;margin-bottom:12px}
+    .secondary{background:#10b981;color:#fff}
+    .ghost{background:#fff;border:1px solid #d9d9df;color:#0D1B3E;margin-top:12px}
+    .primary:hover,.secondary:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(50,125,237,0.3)}
+    .ghost:hover{background:#f5f5f5}
+    .primary:active,.secondary:active,.ghost:active{transform:translateY(0)}
+    .primary:disabled,.secondary:disabled{opacity:0.6;cursor:not-allowed}
+    .toast{position:fixed;top:20px;right:20px;background:#10b981;color:#fff;padding:14px 24px;border-radius:8px;font-weight:600;opacity:0;transition:opacity 0.3s;z-index:1000;font-family:Arial,Helvetica,sans-serif;box-shadow:0 4px 12px rgba(0,0,0,0.15)}
+    .toast.show{opacity:1}
+    .toast.error{background:#dc3545}
+    .success-indicator{display:none;margin-top:12px;padding:12px;background:#d4edda;border-radius:8px;color:#155724;font-size:13px;text-align:center;font-family:Arial,Helvetica,sans-serif}
+    .success-indicator.show{display:block}
+    details{margin-top:18px;background:#f9f9f9;padding:12px;border-radius:8px;font-family:Arial,Helvetica,sans-serif}
+    details summary{cursor:pointer;font-weight:600;margin-bottom:8px;color:#0D1B3E;font-family:Arial,Helvetica,sans-serif}
+    details ul{margin:8px 0;padding-left:20px}
+    details li{margin:4px 0}
+    @media (max-width:768px){
+      .grid{grid-template-columns:1fr}
+      .wrap{padding:12px}
+      .card{padding:16px}
+      .toast{top:10px;right:10px;left:10px;font-size:13px;padding:12px 16px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>NBNU | SIINB Signature Generator</h1>
+      
+      <!-- Browser compatibility warning -->
+      <div id="browserWarning" class="browser-warning">
+        <strong>⚠️ Browser Tip:</strong> Safari may not copy formatting properly. For best results, use <b>Chrome</b> or <b>Edge</b> browser.
+      </div>
+      
+      <!-- Overview Instructions -->
+      <div class="instructions">
+        <h3>How this works</h3>
+        <p>You'll create <strong>two signatures</strong> for Outlook:</p>
+        <ul style="margin:8px 0;padding-left:20px">
+          <li><strong>Full Signature</strong> – for new emails (with logo and contact info)</li>
+          <li><strong>Reply Signature</strong> – for replies/forwards (just name and title) This prevents clutter in email threads.</li>
+        </ul>
+        <p style="margin-top:12px"><strong>Takes less than 5 minutes.</strong> Just follow the steps below in order.</p>
+      </div>
+
+      <div class="warning">
+        <strong>⚠️ Important:</strong> Don't edit signatures in Outlook after pasting. If you need changes, come back to this page and copy again.
+      </div>
+
+      <!-- Form Fields -->
+      <h2 style="margin-top:32px;margin-bottom:16px;font-size:18px;color:#0D1B3E">Step 1: Fill Out Your Information</h2>
+      <div class="grid">
+        <div>
+          <label for="name">First &amp; Last Name *</label>
+          <input id="name" placeholder="e.g., Madison Guay" required />
+        </div>
+        <div>
+          <label for="pronouns">Pronouns (optional)</label>
+          <input id="pronouns" placeholder="e.g., she/her" />
+          <div class="field-hint">Will appear after your name in parentheses</div>
+        </div>
+        <div>
+          <label for="title">Title (English / French) *</label>
+          <input id="title" placeholder="e.g., Administrative Assistant / Assistante Administrative" required />
+        </div>
+        <div>
+          <label for="email">Email (optional)</label>
+          <input id="email" type="email" placeholder="e.g., mguay@nbnu.ca" />
+          <div class="field-hint">Leave blank if you prefer not to display it</div>
+        </div>
+        <div>
+          <label for="tel">Telephone *</label>
+          <input id="tel" placeholder="e.g., 506.555.1234" required />
+          <div class="field-hint">Use format: 506.555.1234</div>
+        </div>
+        <div>
+          <label for="cell">Cell (optional)</label>
+          <input id="cell" placeholder="e.g., 506.555.5678" />
+          <div class="field-hint">Use format: 506.555.5678</div>
+        </div>
+      </div>
+
+<!-- Full Signature Section -->
+<div class="signature-section">
+  <h2>Step 2: Set Up Your Full Signature (for new emails)</h2>
+  <p><strong>2.1</strong> Click the button below:</p>
+  <button class="primary" id="btnCopyFull">Copy Full Signature</button>
+  <div id="successFull" class="success-indicator">✅ Full signature copied!</div>
+</div>
+
+<div class="instructions">
+  <p><strong>2.2</strong> Open Outlook Signature Settings using this link:<br>
+    <a href="https://outlook.office.com/mail/options/accounts-category/signatures-subcategory" target="_blank">➡️ Open Outlook Signature Settings</a><br>
+    <em style="font-size:12px;color:#666;">(Keep this tab open — you’ll return here after.)</em>
+  </p>
+
+  <p><strong>2.3</strong> Click <strong>+ New signature</strong></p>
+  <img src="https://raw.githubusercontent.com/nbnusiinb/nbnu-signature-assets/refs/heads/main/Assets/png/Screenshot01.png" />
+
+  <p><strong>2.4</strong> Name it: <strong>NBNU new messages</strong></p>
+  <p><strong>2.5</strong> Paste your signature into the box (Ctrl+V)</p>
+
+  <p><strong>2.6</strong> Click <strong>Save</strong></p>
+  <img src="https://raw.githubusercontent.com/nbnusiinb/nbnu-signature-assets/refs/heads/main/Assets/png/Screenshot02.png" />
+
+  <p><strong>2.7</strong> Scroll down under <strong>Select default signatures</strong>:</p>
+  <ul>
+    <li><strong>New messages</strong> → <strong>NBNU new messages</strong></li>
+    <li>Click <strong>Save</strong></li>
+  </ul>
+  <img src="https://raw.githubusercontent.com/nbnusiinb/nbnu-signature-assets/refs/heads/main/Assets/png/Screenshot03.png" />
+
+  <p><strong>Leave that Outlook tab open</strong>, then return to this page and and set up your Reply Signature (for replies/forwards) as described below</p>
+</div>
+
+<!-- Reply Signature Section -->
+<div class="signature-section">
+  <h2>↩️ Step 3: Set Up Your Reply Signature (for replies/forwards)</h2>
+  <p><strong>3.1</strong> Click Copy Reply Signature button below:</p>
+  <button class="secondary" id="btnCopyReply">Copy Reply Signature</button>
+  <div id="successReply" class="success-indicator">✅ Reply signature copied!</div>
+</div>
+
+<div class="instructions">
+  <p><strong>3.2</strong> Return to the Outlook settings tab (<a href="https://outlook.office.com/mail/options/accounts-category/signatures-subcategory" target="_blank">or click here</a>)</p>
+
+  <p><strong>3.3</strong> Click <strong>+ New signature</strong> again</p>
+  <p><strong>3.4</strong> Name it: <strong>NBNU replies</strong></p>
+  <p><strong>3.5</strong> Paste your reply signature</p>
+  <p><strong>3.6</strong> Click <strong>Save</strong></p>
+
+  <p><strong>3.7</strong> Under <strong>Select default signatures</strong>:</p>
+  <ul>
+    <li><strong>New messages</strong> → <strong>NBNU new messages</strong></li>
+    <li><strong>Replies/forwards</strong> → <strong>NBNU replies</strong></li>
+    <li>Click <strong>Save</strong></li>
+  </ul>
+  <img src="https://raw.githubusercontent.com/nbnusiinb/nbnu-signature-assets/refs/heads/main/Assets/png/Screenshot04.png" />
+</div>
+
+<!-- Final Step -->
+<div class="instructions" style="background:#d4edda;border-left-color:#28a745">
+  <h3 style="color:#28a745">✅ Step 4: Finish Setup</h3>
+  <p><strong>4.1</strong> Close the Outlook settings tab.</p>
+  <p><strong>4.2</strong> Restart Outlook (web and desktop if you use both).</p>
+
+  <p><strong>4.3 Test your signatures: Send yourself a test email and a test reply to make sure both signatures appear correctly.</strong></p>
+  <ul>
+    <li>New emails use your <strong>full signature</strong></li>
+    <li>Replies & forwards use your <strong>short signature</strong></li>
+  </ul>
+
+  <p><strong>Done! 🎉</strong></p>
+</div>
+
+
+      <!-- What if I made a mistake -->
+      <details style="border:2px solid #ffc107;background:#fffbf0">
+        <summary style="color:#856404">⚠️ What if I made a mistake or need to fix something?</summary>
+        <ul style="padding-left:20px;margin-top:12px">
+          <li><strong>Wrong information in signature:</strong> Come back to this page, update the form, and copy the signature again. Then paste it into Outlook (it will replace the old one).</li>
+          <li><strong>Named the signature wrong:</strong> In Outlook settings, you can rename a signature by clicking on it and typing a new name at the top.</li>
+          <li><strong>Signature not showing up:</strong> Make sure you selected it in "Select default signatures" and clicked Save. Try restarting Outlook.</li>
+          <li><strong>Want to delete and start over:</strong> In Outlook settings, click the signature name, then click the trash/delete icon.</li>
+        </ul>
+      </details>
+
+      <!-- Clear Form Button -->
+      <button class="ghost" id="btnReset">Clear Form &amp; Start Over</button>
+
+      <!-- Troubleshooting -->
+      <details>
+        <summary>Having trouble? Click here for help</summary>
+        <ul>
+          <li><b>Signature won't paste with formatting:</b> Make sure you're using Chrome, Edge, or Firefox. Safari may have issues with copying HTML formatting.</li>
+          <li><b>Images not showing after pasting:</b> Ensure you pasted into the Outlook <strong>signature editor</strong> (Settings → Signatures), not directly into an email draft.</li>
+          <li><b>Phone number format:</b> Use the format 506.555.1234 (with periods, not dashes or parentheses) for consistency.</li>
+          <li><b>Formatting looks wrong after pasting:</b> Try copying the signature again and ensure all required fields (*) are filled in before copying.</li>
+          <li><b>Testing your signature:</b> After setup, send yourself a test email and a test reply to verify both signatures appear correctly.</li>
+          <li><b>Mobile Outlook app:</b> Your signatures should sync automatically to the Outlook mobile app within 24 hours. If not, try signing out and back in.</li>
+          <li><b>Outlook Desktop (Windows/Mac):</b> If using Outlook Desktop application, you may need to close and reopen the app for changes to take effect.</li>
+        </ul>
+      </details>
+
+      <!-- Help Section -->
+      <div style="margin-top:24px;padding:20px;background:#e8f4f8;border-radius:10px;text-align:center;font-family:Arial,Helvetica,sans-serif">
+        <p style="margin:0;font-size:15px;color:#0D1B3E"><strong>❓ Need more help?</strong></p>
+        <p style="margin:8px 0 0;font-size:14px;color:#666">Contact Esther - I'm happy to help - quick and painless I promise! 😊</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    // Image URLs - optimized for email performance
+    const LOGO = 'https://raw.githubusercontent.com/nbnusiinb/nbnu-signature-assets/refs/heads/main/Assets/png/NBNU-Email-Logo_sm.png';
+    const FB   = 'https://raw.githubusercontent.com/nbnusiinb/nbnu-signature-assets/refs/heads/main/Assets/png/NBNU-Email-Icon-FB_sm.png';
+    const IG   = 'https://raw.githubusercontent.com/nbnusiinb/nbnu-signature-assets/refs/heads/main/Assets/png/NBNU-Email-Icon-IG_sm.png';
+    const BLUE = '#327ded';
+
+    // Escape HTML special characters
+    function escapeHTML(s) {
+      if (!s) return '';
+      return s.replace(/[&<>"']/g, function(m) {
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
+      });
+    }
+
+    // Validate phone number format (basic check)
+    function validatePhoneFormat(phone) {
+      if (!phone) return true; // Optional fields can be empty
+      // Accept formats like: 506.555.1234, 506-555-1234, (506) 555-1234, 5065551234
+      const phoneRegex = /^[\d\s\-\.\(\)]+$/;
+      return phoneRegex.test(phone) && phone.replace(/\D/g, '').length >= 10;
+    }
+
+    // Validate email format
+    function validateEmailFormat(email) {
+      if (!email) return true; // Optional field can be empty
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
+    // Validate required fields and format
+    function validateRequired() {
+      const name = document.getElementById('name').value.trim();
+      const title = document.getElementById('title').value.trim();
+      const tel = document.getElementById('tel').value.trim();
+      const cell = document.getElementById('cell').value.trim();
+      const email = document.getElementById('email').value.trim();
+      
+      // Clear previous error states
+      document.querySelectorAll('input').forEach(input => input.classList.remove('error'));
+      
+      let errors = [];
+      
+      if (!name) {
+        errors.push('Name is required');
+        document.getElementById('name').classList.add('error');
+      }
+      
+      if (!title) {
+        errors.push('Title is required');
+        document.getElementById('title').classList.add('error');
+      }
+      
+      if (!tel) {
+        errors.push('Telephone is required');
+        document.getElementById('tel').classList.add('error');
+      } else if (!validatePhoneFormat(tel)) {
+        errors.push('Telephone format should be like: 506.555.1234');
+        document.getElementById('tel').classList.add('error');
+      }
+      
+      if (cell && !validatePhoneFormat(cell)) {
+        errors.push('Cell phone format should be like: 506.555.1234');
+        document.getElementById('cell').classList.add('error');
+      }
+      
+      if (email && !validateEmailFormat(email)) {
+        errors.push('Please enter a valid email address');
+        document.getElementById('email').classList.add('error');
+      }
+      
+      if (errors.length > 0) {
+        showToast('⚠️ ' + errors[0], true);
+        return false;
+      }
+      
+      return true;
+    }
+
+    // Get form field values
+    function getFields() {
+      return {
+        name: document.getElementById('name').value.trim(),
+        pronouns: document.getElementById('pronouns').value.trim(),
+        title: document.getElementById('title').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        tel: document.getElementById('tel').value.trim(),
+        cell: document.getElementById('cell').value.trim()
+      };
+    }
+
+    // Generate REPLY signature (name and title only)
+    function sigReplyHTML(fields) {
+      const name = fields.name || '[First Name Last Name]';
+      const pron = fields.pronouns;
+      const pronText = pron ? ' <span style="font-family:Arial,Helvetica,sans-serif;font-weight:400;font-size:11px;color:#000000;letter-spacing:0;">(' + escapeHTML(pron) + ')</span>' : '';
+      const title = fields.title || '[Title English / Title French]';
+
+      return '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>' +
+'<table cellpadding="0" cellspacing="0" border="0" style="max-width:750px;font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1a1a1a;line-height:1.5;border-collapse:collapse">' +
+  '<tr>' +
+    '<td>' +
+      '<div style="font-family:Arial,Helvetica,sans-serif;font-weight:600;font-size:12px;color:#3953a3;margin-bottom:4px;letter-spacing:-0.5px;line-height:1.1">' +
+        escapeHTML(name) + pronText +
+      '</div>' +
+      '<div style="font-family:Arial,Helvetica,sans-serif;font-size:9px;color:#000000;font-weight:400;line-height:1.3">' +
+        escapeHTML(title) +
+      '</div>' +
+    '</td>' +
+  '</tr>' +
+'</table>' +
+'</body></html>';
+    }
+
+    // Generate FULL signature (complete with all details)
+    function sigFullHTML(fields) {
+      const name = fields.name || '[First Name Last Name]';
+      const pron = fields.pronouns;
+      const pronText = pron ? ' <span style="font-family:Arial,Helvetica,sans-serif;font-weight:400;font-size:11px;color:#000000;letter-spacing:0;">(' + escapeHTML(pron) + ')</span>' : '';
+      const title = fields.title || '[Title English / Title French]';
+      const tel = fields.tel || '[000.000.0000]';
+      const cell = fields.cell;
+      const email = fields.email;
+      const fax = '506.453.0828';
+
+      let contactLine = '<span style="font-weight:400;">Tel/tél:</span> <span style="font-weight:500;">' + escapeHTML(tel) + '</span>';
+      
+      if (cell) {
+        contactLine += '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<span style="font-weight:400;">Cell/cel:</span> <span style="font-weight:500;">' + escapeHTML(cell) + '</span>';
+      }
+      
+      contactLine += '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<span style="font-weight:400;">Fax/téléc:</span> <span style="font-weight:500;">' + fax + '</span>';
+      
+      if (email) {
+        contactLine += '<br><span style="font-weight:400;">Email/courriel:</span> <a href="mailto:' + escapeHTML(email) + '" style="color:#000000;text-decoration:none;font-weight:500;">' + escapeHTML(email) + '</a>';
+      }
+
+      const landAckText = 'NBNU acknowledges with gratitude that we, and our members, work on the traditional and unceded territory of the Peskotomuhkati, Wolastoqiyik, and Mi\'kmaq Peoples, who have cared for these lands since time immemorial. We also recognize the ongoing impacts of colonialism and the need for truth and reconciliation.';
+      
+      const confDisclaimerText = 'This email (including attachments, if any) contains information intended for the person(s) named, is confidential, and may be privileged. Any other distribution, copying or disclosure is strictly prohibited and does not constitute waiver of privilege. If you have received this email in error, please notify us immediately at the telephone number above or reply by email to the sender, and delete all copies of this message (and attachments, if any) from your computer system and records.';
+      
+      return '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>' +
+'<table cellpadding="0" cellspacing="0" border="0" style="max-width:750px;font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1a1a1a;line-height:1.5;border-collapse:collapse">' +
+  '<tr>' +
+    '<td style="padding-bottom:4px">' +
+      '<div style="font-family:Arial,Helvetica,sans-serif;font-weight:600;font-size:12px;color:#3953a3;margin-bottom:4px;letter-spacing:-0.5px;line-height:1.1">' +
+        escapeHTML(name) + pronText +
+      '</div>' +
+      '<div style="font-family:Arial,Helvetica,sans-serif;font-size:9px;color:#000000;margin-bottom:5px;font-weight:400;line-height:1.3">' +
+        escapeHTML(title) +
+      '</div>' +
+    '</td>' +
+  '</tr>' +
+  '<tr>' +
+    '<td style="padding-bottom:6px">' +
+      '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse">' +
+        '<tr>' +
+          '<td style="height:3px;background-color:' + BLUE + ';line-height:0;font-size:0">&nbsp;</td>' +
+        '</tr>' +
+      '</table>' +
+    '</td>' +
+  '</tr>' +
+  '<tr>' +
+    '<td style="padding-bottom:10px">' +
+      '<div style="font-family:Arial,Helvetica,sans-serif;font-size:9px;color:#000000;line-height:1.4">' +
+        contactLine +
+      '</div>' +
+    '</td>' +
+  '</tr>' +
+  '<tr>' +
+    '<td style="padding-bottom:10px">' +
+      '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse">' +
+        '<tr>' +
+          '<td style="vertical-align:middle;width:auto">' +
+            '<img src="' + LOGO + '" alt="New Brunswick Nurses Union NBNU Syndicat des infirmières et infirmiers du Nouveau-Brunswick SIINB Logo" width="200" height="29" style="height:29px;width:200px;display:block;border:none" />' +
+          '</td>' +
+          '<td style="vertical-align:middle;text-align:left;padding-left:25px">' +
+            '<a href="https://www.facebook.com/NBNursesUnion/" style="text-decoration:none;margin-right:12px;display:inline-block;vertical-align:middle">' +
+              '<img src="' + FB + '" alt="Facebook" width="28" height="28" style="width:28px;height:28px;display:block;border:none" />' +
+            '</a>' +
+            '<a href="https://www.instagram.com/nbnu_siinb/" style="text-decoration:none;display:inline-block;vertical-align:middle">' +
+              '<img src="' + IG + '" alt="Instagram" width="28" height="28" style="width:28px;height:28px;display:block;border:none" />' +
+            '</a>' +
+          '</td>' +
+        '</tr>' +
+      '</table>' +
+    '</td>' +
+  '</tr>' +
+  '<tr>' +
+    '<td style="padding:10px 12px;background-color:#EEF1F5;border-radius:4px">' +
+      '<div style="font-family:Arial,Helvetica,sans-serif;font-size:9px;color:#707070;line-height:1.6">' +
+        '<strong style="font-family:Arial,Helvetica,sans-serif;color:#707070;font-size:9px;font-weight:600">Land Acknowledgement:</strong>' +
+      '</div>' +
+      '<div style="font-family:Arial,Helvetica,sans-serif;font-size:9px;color:#707070;line-height:1.6;padding-top:3px">' +
+        '<span style="font-weight:400;font-style:italic">' + landAckText + '</span>' +
+      '</div>' +
+    '</td>' +
+  '</tr>' +
+  '<tr><td style="padding-top:4px"></td></tr>' +
+  '<tr>' +
+    '<td style="padding:10px 12px;background-color:transparent">' +
+      '<div style="font-family:Arial,Helvetica,sans-serif;font-size:9px;color:#707070;line-height:1.6">' +
+        '<strong style="font-family:Arial,Helvetica,sans-serif;color:#707070;font-size:9px;font-weight:600">Confidentiality Disclaimer:</strong>' +
+      '</div>' +
+      '<div style="font-family:Arial,Helvetica,sans-serif;font-size:9px;color:#707070;line-height:1.6;padding-top:3px">' +
+        '<span style="font-weight:400;font-style:italic">' + confDisclaimerText + '</span>' +
+      '</div>' +
+    '</td>' +
+  '</tr>' +
+'</table>' +
+'</body></html>';
+    }
+
+    // Show toast notification
+    function showToast(message, isError = false) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.toggle('error', isError);
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, isError ? 4000 : 3000);
+    }
+
+    // Cross-browser copy function with multiple fallbacks
+    async function copyToClipboard(html) {
+      // Method 1: Modern Clipboard API (best for formatting)
+      if (navigator.clipboard && window.ClipboardItem) {
+        try {
+          const blob = new Blob([html], { type: 'text/html' });
+          const plainText = html.replace(/<[^>]*>/g, '');
+          const clipboardItem = new ClipboardItem({
+            'text/html': blob,
+            'text/plain': new Blob([plainText], { type: 'text/plain' })
+          });
+          await navigator.clipboard.write([clipboardItem]);
+          return true;
+        } catch (err) {
+          console.warn('Clipboard API failed:', err);
+        }
+      }
+
+      // Method 2: execCommand fallback (for older browsers)
+      try {
+        const tempDiv = document.createElement('div');
+        tempDiv.style.position = 'fixed';
+        tempDiv.style.left = '-9999px';
+        tempDiv.innerHTML = html;
+        document.body.appendChild(tempDiv);
+        
+        const range = document.createRange();
+        range.selectNodeContents(tempDiv);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        
+        const success = document.execCommand('copy');
+        
+        selection.removeAllRanges();
+        document.body.removeChild(tempDiv);
+        
+        if (success) return true;
+      } catch (err) {
+        console.warn('execCommand failed:', err);
+      }
+
+      return false;
+    }
+
+    // Copy Full Signature
+    document.getElementById('btnCopyFull').addEventListener('click', async function() {
+      if (!validateRequired()) return;
+      
+      const button = this;
+      button.disabled = true;
+      button.textContent = '⏳ Copying...';
+      
+      const fields = getFields();
+      const html = sigFullHTML(fields);
+      
+      const success = await copyToClipboard(html);
+      
+      if (success) {
+        button.textContent = '✅ Copied!';
+        showToast('✓ Full signature copied to clipboard!');
+        document.getElementById('successFull').classList.add('show');
+        
+        setTimeout(() => {
+          button.textContent = '📋 Copy Full Signature';
+          button.disabled = false;
+        }, 5000);
+      } else {
+        button.textContent = '❌ Copy Failed';
+        button.disabled = false;
+        showToast('Copy failed. Please try using Chrome or Edge browser.', true);
+        setTimeout(() => {
+          button.textContent = '📋 Copy Full Signature';
+        }, 3000);
+      }
+    });
+
+    // Copy Reply Signature
+    document.getElementById('btnCopyReply').addEventListener('click', async function() {
+      if (!validateRequired()) return;
+      
+      const button = this;
+      button.disabled = true;
+      button.textContent = '⏳ Copying...';
+      
+      const fields = getFields();
+      const html = sigReplyHTML(fields);
+      
+      const success = await copyToClipboard(html);
+      
+      if (success) {
+        button.textContent = '✅ Copied!';
+        showToast('✓ Reply signature copied to clipboard!');
+        document.getElementById('successReply').classList.add('show');
+        
+        setTimeout(() => {
+          button.textContent = '📋 Copy Reply Signature';
+          button.disabled = false;
+        }, 5000);
+      } else {
+        button.textContent = '❌ Copy Failed';
+        button.disabled = false;
+        showToast('Copy failed. Please try using Chrome or Edge browser.', true);
+        setTimeout(() => {
+          button.textContent = '📋 Copy Reply Signature';
+        }, 3000);
+      }
+    });
+
+    // Clear Form
+    document.getElementById('btnReset').addEventListener('click', function() {
+      if (confirm('Are you sure you want to clear all fields and start over?')) {
+        document.getElementById('name').value = '';
+        document.getElementById('pronouns').value = '';
+        document.getElementById('title').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('tel').value = '';
+        document.getElementById('cell').value = '';
+        document.getElementById('successFull').classList.remove('show');
+        document.getElementById('successReply').classList.remove('show');
+        document.querySelectorAll('input').forEach(input => input.classList.remove('error'));
+        showToast('✓ Form cleared');
+      }
+    });
+
+    // Browser compatibility check on page load
+    window.addEventListener('DOMContentLoaded', function() {
+      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      
+      if (isSafari) {
+        document.getElementById('browserWarning').classList.add('show');
+      }
+    });
+
+    // Clear error state on input
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('input', function() {
+        this.classList.remove('error');
+      });
+    });
+  </script>
+</body>
+</html>
